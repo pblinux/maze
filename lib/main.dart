@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:maze_game/maze.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MazeApp());
 
-class MyApp extends StatelessWidget {
+class MazeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Maze Demo',
         theme: ThemeData(primarySwatch: Colors.orange),
         home: MazeScreen());
   }
