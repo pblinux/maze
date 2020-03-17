@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Flutter Demo',
-        theme: ThemeData(primarySwatch: Colors.blue),
+        theme: ThemeData(primarySwatch: Colors.orange),
         home: MazeScreen());
   }
 }
@@ -19,12 +19,13 @@ class MazeScreen extends StatefulWidget {
 }
 
 class _MazeScreenState extends State<MazeScreen> {
-  final MazePainter _mazePainter = MazePainter();
+  final MazePainter _mazePainter = MazePainter(wallColor: Colors.green);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
+        backgroundColor: Colors.white,
+        appBar: AppBar(title: Text('Maze')),
         body: GestureDetector(
             onVerticalDragUpdate: (info) =>
                 _mazePainter.updatePosition(info.localPosition),
