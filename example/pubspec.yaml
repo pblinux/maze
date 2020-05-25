@@ -23,7 +23,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  maze_game:
+  maze:
     path: ../
 
 

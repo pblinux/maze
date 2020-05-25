@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:maze_game/maze.dart';
+import 'package:maze/maze.dart';
 
 void main() => runApp(MazeApp());
 
