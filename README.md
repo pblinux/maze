@@ -2,6 +2,8 @@
 
 A simple maze game in Flutter. It also serves as a CustomPainter example.
 
+<img src="https://raw.githubusercontent.com/pblinux/maze/package/img/maze.png" height="350">
+
 ## ¿Why?
 
 In another project, I needed to create a "simple" maze game that can be used in low-end devices, so game engine was not an option.
