@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui' as ui;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
+import 'package:universal_io/io.dart';
 import 'maze_painter.dart';
 import 'models/item.dart';
 
@@ -153,11 +153,9 @@ class _MazeState extends State<Maze> {
   ///Creates a Image from network
   Future<ui.Image> _netwokrToByte(String url) async {
     final completer = Completer<ui.Image>();
-    final httpClient = HttpClient();
-    final request = await httpClient.getUrl(Uri.parse(url));
-    final response = await request.close();
-    final bytes = await consolidateHttpClientResponseBytes(response);
-    ui.decodeImageFromList(bytes.buffer.asUint8List(), completer.complete);
+    final response = await http.get(url);
+    ui.decodeImageFromList(
+        response.bodyBytes.buffer.asUint8List(), completer.complete);
     return completer.future;
   }
 }

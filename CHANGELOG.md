@@ -1,3 +1,6 @@
+## [2.0.0]
+* Web support.
+
 ## [1.0.0+1]
 * Update dependencies and fixes for launch.
 
