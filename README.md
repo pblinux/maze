@@ -16,7 +16,7 @@ So, this is a "port" of that saviour example.
 
 ## Maze package
 
-[![pub](https://img.shields.io/badge/pub-1.0.0-blue)](https://pub.dev/packages/maze)
+[![pub](https://img.shields.io/badge/pub-2.0.0-blue)](https://pub.dev/packages/maze)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://github.com/pblinux/end_credits)
