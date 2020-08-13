@@ -1,3 +1,6 @@
+## [2.0.1]
+* Fix pubspec.
+
 ## [2.0.0]
 * Web support.
 

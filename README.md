@@ -27,7 +27,7 @@ You can use it in your project, you only need to add the dependency:
 dependencies:
   flutter:
     sdk: flutter
-  maze_game: 2.0.0
+  maze_game: 2.0.1
 ```
 
 Now you can create your Maze:
