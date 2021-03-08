@@ -16,10 +16,10 @@ So, this is a "port" of that saviour example.
 
 ## Maze package
 
-[![pub](https://img.shields.io/badge/pub-2.0.0-blue)](https://pub.dev/packages/maze)
+[![pub](https://img.shields.io/badge/pub-3.0.0-blue)](https://pub.dev/packages/maze)
 [![Project Status: Active](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![style: effective dart](https://img.shields.io/badge/style-effective_dart-40c4ff.svg)](https://github.com/pblinux/end_credits)
+[![style: very good analysis](https://img.shields.io/badge/style-very_good_analysis-B22C89.svg)](https://pub.dev/packages/very_good_analysis)
 
 You can use it in your project, you only need to add the dependency:
 
@@ -27,7 +27,7 @@ You can use it in your project, you only need to add the dependency:
 dependencies:
   flutter:
     sdk: flutter
-  maze_game: 2.0.1
+  maze_game: 3.0.0
 ```
 
 Now you can create your Maze:
