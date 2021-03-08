@@ -3,6 +3,9 @@
 ///Holds a position in the maze.
 ///Have `walls` and a [col][row] position
 class Cell {
+  ///Default constructor
+  Cell(this.col, this.row);
+
   ///Bottom wall
   bool bottomWall = true;
 
@@ -23,7 +26,4 @@ class Cell {
 
   ///Row position
   int row;
-
-  ///Default constructor
-  Cell(this.col, this.row);
 }

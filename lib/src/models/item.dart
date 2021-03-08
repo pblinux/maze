@@ -16,12 +16,12 @@ enum ImageType {
 ///
 ///Handle info for image and its type
 class MazeItem {
+  ///Default constructor
+  MazeItem(this.path, this.type);
+
   ///Image type
   ImageType type;
 
   ///Image path
   String path;
-
-  ///Default constructor
-  MazeItem(this.path, this.type);
 }

@@ -10,11 +10,27 @@ import 'models/item.dart';
 ///Maze
 ///
 ///Create a simple but powerfull maze game
-///You can customize [wallCollor], [wallThickness],
-///[colums] and [rows]. A [player] is required and also
+///You can customize [wallColor], [wallThickness],
+///[columns] and [rows]. A [player] is required and also
 ///you can pass a List of [checkpoints] and you will be notified
 ///if the player pass through a checkout at [onCheckpoint]
 class Maze extends StatefulWidget {
+  ///Default constructor
+  Maze({
+    required this.player,
+    this.checkpoints = const [],
+    this.columns = 10,
+    this.finish,
+    this.height,
+    this.loadingWidget,
+    this.onCheckpoint,
+    this.onFinish,
+    this.rows = 7,
+    this.wallColor = Colors.black,
+    this.wallThickness = 3.0,
+    this.width,
+  });
+
   ///List of checkpoints
   final List<MazeItem> checkpoints;
 
@@ -22,19 +38,19 @@ class Maze extends StatefulWidget {
   final int columns;
 
   ///The finish image
-  final MazeItem finish;
+  final MazeItem? finish;
 
   ///Height of the maze
-  final double height;
+  final double? height;
 
   ///A widget to show while loading all
-  final Widget loadingWidget;
+  final Widget? loadingWidget;
 
   ///Callback when the player pass through a checkpoint
-  final Function(int) onCheckpoint;
+  final Function(int)? onCheckpoint;
 
   ///Callback when the player reach finish
-  final Function() onFinish;
+  final Function()? onFinish;
 
   ///The main player
   final MazeItem player;
@@ -43,30 +59,15 @@ class Maze extends StatefulWidget {
   final int rows;
 
   ///Wall color
-  final Color wallColor;
+  final Color? wallColor;
 
   ///Wall thickness
   ///
   ///Default: 3.0
-  final double wallThickness;
+  final double? wallThickness;
 
   ///Width of the maze
-  final double width;
-
-  ///Default constructor
-  Maze(
-      {@required this.player,
-      this.checkpoints = const [],
-      this.columns = 10,
-      this.finish,
-      this.height,
-      this.loadingWidget,
-      this.onCheckpoint,
-      this.onFinish,
-      this.rows = 7,
-      this.wallColor = Colors.black,
-      this.wallThickness = 3.0,
-      this.width});
+  final double? width;
 
   @override
   _MazeState createState() => _MazeState();
@@ -74,7 +75,7 @@ class Maze extends StatefulWidget {
 
 class _MazeState extends State<Maze> {
   bool _loaded = false;
-  MazePainter _mazePainter;
+  late MazePainter _mazePainter;
 
   @override
   void initState() {
@@ -87,18 +88,19 @@ class _MazeState extends State<Maze> {
     final checkpoints = await Future.wait(
         widget.checkpoints.map((c) async => await _itemToImage(c)));
     final finishImage =
-        widget.finish != null ? await _itemToImage(widget.finish) : null;
+        widget.finish != null ? await _itemToImage(widget.finish!) : null;
 
     _mazePainter = MazePainter(
-        checkpointsImages: checkpoints,
-        columns: widget.columns,
-        finishImage: finishImage,
-        onCheckpoint: widget.onCheckpoint,
-        onFinish: widget.onFinish,
-        playerImage: playerImage,
-        rows: widget.rows,
-        wallColor: widget.wallColor,
-        wallThickness: widget.wallThickness);
+      checkpointsImages: checkpoints,
+      columns: widget.columns,
+      finishImage: finishImage,
+      onCheckpoint: widget.onCheckpoint,
+      onFinish: widget.onFinish,
+      playerImage: playerImage,
+      rows: widget.rows,
+      wallColor: widget.wallColor ?? Colors.black,
+      wallThickness: widget.wallThickness ?? 4.0,
+    );
     setState(() => _loaded = true);
   }
 
@@ -115,9 +117,11 @@ class _MazeState extends State<Maze> {
                     widget.height ?? context.height)));
       } else {
         if (widget.loadingWidget != null) {
-          return widget.loadingWidget;
+          return widget.loadingWidget!;
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
         }
       }
     }));
@@ -128,7 +132,7 @@ class _MazeState extends State<Maze> {
       case ImageType.file:
         return _fileToByte(item.path);
       case ImageType.network:
-        return _netwokrToByte(item.path);
+        return _networkToByte(item.path);
       default:
         return _assetToByte(item.path);
     }
@@ -151,9 +155,9 @@ class _MazeState extends State<Maze> {
   }
 
   ///Creates a Image from network
-  Future<ui.Image> _netwokrToByte(String url) async {
+  Future<ui.Image> _networkToByte(String url) async {
     final completer = Completer<ui.Image>();
-    final response = await http.get(url);
+    final response = await http.get(Uri.parse(url));
     ui.decodeImageFromList(
         response.bodyBytes.buffer.asUint8List(), completer.complete);
     return completer.future;

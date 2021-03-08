@@ -1,9 +1,9 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart' hide Stack;
-import 'package:stack/stack.dart';
 import 'models/cell.dart';
 import 'models/item_position.dart';
+import 'models/stack.dart';
 
 /// Direction movement
 enum Direction {
@@ -24,63 +24,18 @@ enum Direction {
 ///
 ///Draws the maze based on params
 class MazePainter extends ChangeNotifier implements CustomPainter {
-  ///Images for checkpoints
-  final List<ui.Image> checkpointsImages;
-
-  ///Number of collums
-  final int columns;
-
-  ///Image for player
-  final ui.Image finishImage;
-
-  ///Callback when the player reach a checkpoint
-  final Function(int) onCheckpoint;
-
-  ///Callback when the player reach the finish
-  final Function onFinish;
-
-  ///Image for player
-  final ui.Image playerImage;
-
-  ///Number of rows
-  final int rows;
-
-  ///Color of the walls
-  Color wallColor;
-
-  ///Size of the walls
-  final double wallThickness;
-
-  ///Private attributes
-  Cell _player, _exit;
-  List<ItemPosition> _checkpointsPositions;
-  List<List<Cell>> _cells;
-  List<ui.Image> _checkpoints;
-  double _cellSize, _hMargin, _vMargin;
-
-  ///Paints for `exit`, `player` and `walls`
-  final Paint _exitPaint = Paint();
-  final Paint _playerPaint = Paint();
-  final Paint _wallPaint = Paint();
-
-  ///Randomizer for positions and walls distribution
-  final Random _randomizer = Random();
-
-  ///Position of user from event
-  double _userX;
-  double _userY;
-
   ///Default constructor
-  MazePainter(
-      {@required this.playerImage,
-      this.checkpointsImages = const [],
-      this.columns = 7,
-      this.finishImage,
-      this.onCheckpoint,
-      this.onFinish,
-      this.rows = 10,
-      this.wallColor = Colors.black,
-      this.wallThickness = 4.0}) {
+  MazePainter({
+    required this.playerImage,
+    this.checkpointsImages = const [],
+    this.columns = 7,
+    this.finishImage,
+    this.onCheckpoint,
+    this.onFinish,
+    this.rows = 10,
+    this.wallColor = Colors.black,
+    this.wallThickness = 4.0,
+  }) {
     _wallPaint
       ..color = wallColor
       ..isAntiAlias = true
@@ -98,10 +53,57 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
     _createMaze();
   }
 
+  ///Images for checkpoints
+  final List<ui.Image> checkpointsImages;
+
+  ///Number of collums
+  final int columns;
+
+  ///Image for player
+  final ui.Image? finishImage;
+
+  ///Callback when the player reach a checkpoint
+  final Function(int)? onCheckpoint;
+
+  ///Callback when the player reach the finish
+  final Function? onFinish;
+
+  ///Image for player
+  final ui.Image playerImage;
+
+  ///Number of rows
+  final int rows;
+
+  ///Color of the walls
+  Color wallColor;
+
+  ///Size of the walls
+  final double wallThickness;
+
+  ///Private attributes
+  late Cell _player, _exit;
+  late List<ItemPosition> _checkpointsPositions;
+  late List<List<Cell>> _cells;
+  late List<ui.Image> _checkpoints;
+  late double _cellSize, _hMargin, _vMargin;
+
+  ///Paints for `exit`, `player` and `walls`
+  final Paint _exitPaint = Paint();
+  final Paint _playerPaint = Paint();
+  final Paint _wallPaint = Paint();
+
+  ///Randomizer for positions and walls distribution
+  final Random _randomizer = Random();
+
+  ///Position of user from event
+  late double _userX;
+  late double _userY;
+
   ///This method initialize the maze by randomizing what wall will be disable
   void _createMaze() {
     var stack = Stack<Cell>();
-    Cell current, next;
+    Cell current;
+    Cell? next;
 
     _cells =
         List.generate(columns, (c) => List.generate(rows, (r) => Cell(c, r)));
@@ -109,16 +111,14 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
     _player = _cells.first.first;
     _exit = _cells.last.last;
 
-    current = _cells.first.first;
-    current.visited = true;
+    current = _cells.first.first..visited = true;
 
     do {
       next = _getNext(current);
       if (next != null) {
         _removeWall(current, next);
         stack.push(current);
-        current = next;
-        current.visited = true;
+        current = next..visited = true;
       } else {
         current = stack.pop();
       }
@@ -159,9 +159,7 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
         }
     }
 
-    final result = _checkpointsPositions.singleWhere(
-        (i) => i == ItemPosition(col: _player.col, row: _player.row),
-        orElse: () => null);
+    final result = _getItemPosition(_player.col, _player.row);
 
     if (result != null) {
       final checkpointIndex = _checkpointsPositions.indexOf(result);
@@ -169,13 +167,13 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
       _checkpoints.remove(image);
       _checkpointsPositions.removeAt(checkpointIndex);
       if (onCheckpoint != null) {
-        onCheckpoint(checkpointsImages.indexOf(image));
+        onCheckpoint!(checkpointsImages.indexOf(image));
       }
     }
 
     if (_player.col == _exit.col && _player.row == _exit.row) {
       if (onFinish != null) {
-        onFinish();
+        onFinish!();
       }
     }
   }
@@ -264,9 +262,10 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
 
     if (finishImage != null) {
       canvas.drawImageRect(
-          finishImage,
+          finishImage!,
           Offset.zero &
-              Size(finishImage.width.toDouble(), finishImage.height.toDouble()),
+              Size(finishImage!.width.toDouble(),
+                  finishImage!.height.toDouble()),
           Offset(_exit.col * _cellSize + squareMargin,
                   _exit.row * _cellSize + squareMargin) &
               Size(_cellSize - squareMargin, _cellSize - squareMargin),
@@ -304,7 +303,7 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
   }
 
   @override
-  List<CustomPainterSemantics> Function(Size) get semanticsBuilder => null;
+  List<CustomPainterSemantics> Function(Size)? get semanticsBuilder => null;
 
   @override
   bool shouldRebuildSemantics(CustomPainter oldDelegate) {
@@ -316,7 +315,7 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
     return true;
   }
 
-  Cell _getNext(Cell cell) {
+  Cell? _getNext(Cell cell) {
     var neighbours = <Cell>[];
 
     //left
@@ -346,7 +345,7 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
         neighbours.add(_cells[cell.col][cell.row + 1]);
       }
     }
-    if (neighbours.length > 0) {
+    if (neighbours.isNotEmpty) {
       final index = _randomizer.nextInt(neighbours.length);
       return neighbours[index];
     }
@@ -376,6 +375,15 @@ class MazePainter extends ChangeNotifier implements CustomPainter {
     if (current.col == next.col - 1 && current.row == next.row) {
       current.rightWall = false;
       next.leftWall = false;
+    }
+  }
+
+  ItemPosition? _getItemPosition(int col, int row) {
+    try {
+      return _checkpointsPositions.singleWhere(
+          (element) => element == ItemPosition(col: col, row: row));
+    } catch (e) {
+      return null;
     }
   }
 }
