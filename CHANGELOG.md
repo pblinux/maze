@@ -1,3 +1,7 @@
+## [3.0.0]
+* Null safety support
+* Update dependencies
+
 ## [2.0.1]
 * Fix pubspec.
 
